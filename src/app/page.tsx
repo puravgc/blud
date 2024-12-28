@@ -6,9 +6,9 @@ import { FaTwitter } from "react-icons/fa";
 
 export default function Home() {
   return (
-    <div className="h-fit border border-black">
+    <div className="h-fit pt-10">
       <div className="flex h-full">
-        <div className="w-1/2 border flex flex-col justify-start items-center pt-44">
+        <div className="w-1/2  flex flex-col justify-start items-center pt-44">
           <div>
             <h1 className="text-6xl font-bold text-red-600">
               SHARE LIFE,
@@ -25,20 +25,20 @@ export default function Home() {
                 Request for Blood Donation
               </Button>
             </div>
-            <div className="flex justify-start items-center pt-5 gap-7">
+            <div className="flex justify-start items-center pt-6 gap-7">
               <FaFacebook className="h-6 w-6 text-gray-400 cursor-pointer hover:text-gray-600" />
               <FaSquareInstagram className="h-6 w-6 text-gray-400 cursor-pointer hover:text-gray-600" />
               <FaTwitter className="h-6 w-6 text-gray-400 cursor-pointer hover:text-gray-600" />
             </div>
           </div>
         </div>
-        <div className="w-1/2">
+        <div className="w-1/2 flex justify-center items-center">
           <Image
-            src="/blood-donation.jpg"
+            src="/homebanner.png"
             alt="Blood Donation"
             width={600}
             height={600}
-            className="object-cover w-full h-full"
+            className="object-cover"
           />
         </div>
       </div>
