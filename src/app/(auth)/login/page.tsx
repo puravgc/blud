@@ -13,13 +13,9 @@ import {
 import Image from "next/image";
 
 const LoginPage = () => {
-  const [isHospital, setIsHospital] = useState(true);
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(
-      isHospital ? "Hospital Login Submitted" : "Donor Login Submitted"
-    );
+    console.log("Hospital Login Submitted");
   };
 
   return (
@@ -28,27 +24,11 @@ const LoginPage = () => {
       <div className="flex-1 flex items-center justify-center bg-white p-10">
         <Card className="w-full max-w-lg shadow-lg py-8">
           <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-3xl font-bold">
-              {isHospital ? "Hospital Login" : "Donor Login"}
-            </CardTitle>
+            <CardTitle className="text-3xl font-bold">Hospital Login</CardTitle>
             <p className="text-gray-500">
               Log in to your account to explore more features.
             </p>
           </CardHeader>
-          <div className="flex justify-center space-x-4 mb-4">
-            <Button
-              variant={isHospital ? "default" : "outline"}
-              onClick={() => setIsHospital(true)}
-            >
-              Hospital
-            </Button>
-            <Button
-              variant={!isHospital ? "default" : "outline"}
-              onClick={() => setIsHospital(false)}
-            >
-              Donor
-            </Button>
-          </div>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6">
               <div>
@@ -75,22 +55,20 @@ const LoginPage = () => {
                   required
                 />
               </div>
-              {isHospital && (
-                <div>
-                  <label
-                    htmlFor="hospitalCode"
-                    className="block text-sm font-medium"
-                  >
-                    Hospital Code
-                  </label>
-                  <Input
-                    id="hospitalCode"
-                    type="text"
-                    placeholder="Enter your hospital code"
-                    className="mt-1"
-                  />
-                </div>
-              )}
+              <div>
+                <label
+                  htmlFor="hospitalCode"
+                  className="block text-sm font-medium"
+                >
+                  Hospital Code
+                </label>
+                <Input
+                  id="hospitalCode"
+                  type="text"
+                  placeholder="Enter your hospital code"
+                  className="mt-1"
+                />
+              </div>
               <div className="text-right">
                 <a
                   href="/forgot-password"
@@ -102,12 +80,12 @@ const LoginPage = () => {
             </CardContent>
             <CardFooter className="flex flex-col items-center space-y-6">
               <Button type="submit" className="w-full">
-                Login as {isHospital ? "Hospital" : "Donor"}
+                Login as Hospital
               </Button>
               <p className="text-sm text-gray-500">
                 Don't have an account?{" "}
                 <a
-                  href={isHospital ? "/signup" : "/signup"}
+                  href="/signup"
                   className="text-blue-500 hover:underline"
                 >
                   Sign up now
