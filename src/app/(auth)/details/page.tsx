@@ -30,7 +30,7 @@ const DetailsPage = () => {
       const getDetails = async () => {
         try {
           const response = await fetch(
-            `/api/get-user?email=${user.primaryEmailAddress.emailAddress}`,
+            `/api/get-user?email=${user.primaryEmailAddress?.emailAddress}`,
             {
               method: "GET",
             }

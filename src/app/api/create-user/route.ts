@@ -15,19 +15,33 @@ export async function POST(req: NextRequest) {
 
     await connectToDatabase();
 
-    const newUser = await UserModel.create({
-      name,
-      email,
-      bloodGroup,
-      medicalConditions,
-      additionalInfo,
-    });
+    const existingUser = await UserModel.find({ email: email });
 
-    return NextResponse.json({
-      success: true,
-      user: newUser,
-    });
-  } catch (error) {
+    if (existingUser) {
+      await UserModel.updateOne(
+        { email: email },
+        { $set: { name, bloodGroup, medicalConditions, additionalInfo } }
+      );
+      return NextResponse.json({
+        success: true,
+        message: "User details updated successfully",
+        user: existingUser,
+      });
+    } else {
+      const newUser = await UserModel.create({
+        name,
+        email,
+        bloodGroup,
+        medicalConditions,
+        additionalInfo,
+      });
+
+      return NextResponse.json({
+        success: true,
+        user: newUser,
+      });
+    }
+  } catch (error: any) {
     console.error("Error in POST /api/route:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

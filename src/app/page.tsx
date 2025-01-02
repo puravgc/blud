@@ -3,6 +3,7 @@ import Image from "next/image";
 import { FaFacebook } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import { FaTwitter } from "react-icons/fa";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -18,9 +19,12 @@ export default function Home() {
               One small act of kindness can make a world of difference.
             </p>
             <div className=" flex justify-start items-center w-full pt-5">
-              <Button className=" px-8 py-6 bg-white text-red-500 border border-red-500 font-bold rounded-none shadow-lg hover:bg-red-500 hover:text-white transition duration-300">
-                DONATE NOW!
-              </Button>
+              <Link href="/donate">
+                <Button className=" px-8 py-6 bg-white text-red-500 border border-red-500 font-bold rounded-none shadow-lg hover:bg-red-500 hover:text-white transition duration-300">
+                  DONATE NOW!
+                </Button>
+              </Link>
+
               <Button className=" uppercase px-8 py-6 bg-white text-red-500 border border-red-500 font-bold rounded-none shadow-lg hover:bg-red-500 hover:text-white transition duration-300 ml-5">
                 Request for Blood Donation
               </Button>

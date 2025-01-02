@@ -18,6 +18,7 @@ import {
   useUser,
 } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { Button } from "../ui/button";
 
 const Navbar = () => {
   const { user } = useUser();
@@ -36,11 +37,24 @@ const Navbar = () => {
           </div>
         </Link>
 
-        <div className="text-lg w-1/2">
+        <div className="text-sm w-1/2">
           <ul className="flex justify-evenly gap-4">
-            <Link href="/">
-              <li>Home</li>
-            </Link>
+            <div className="flex justify-center items-center">
+              <Link href="/">
+                <li>Home</li>
+              </Link>
+            </div>
+
+            <SignedIn>
+              <div className="flex items-center relative">
+                <Link href="/emergency">
+                  <li>Emergency Donation</li>
+                </Link>
+                <div className="bg-red-500 h-5 w-5 rounded-full font-bold text-white absolute -right-5 top-0 flex justify-center text-center">
+                  <p>5</p>
+                </div>
+              </div>
+            </SignedIn>
             {/* Signed-out users */}
             <SignedOut>
               <DropdownMenu>
