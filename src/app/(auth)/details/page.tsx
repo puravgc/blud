@@ -21,6 +21,41 @@ const DetailsPage = () => {
   const [additionalInfo, setAdditionalInfo] = useState("");
   const router = useRouter();
 
+  useEffect(() => {
+    if (
+      user &&
+      user.primaryEmailAddress &&
+      user.primaryEmailAddress.emailAddress
+    ) {
+      const getDetails = async () => {
+        try {
+          const response = await fetch(
+            `/api/get-user?email=${user.primaryEmailAddress.emailAddress}`,
+            {
+              method: "GET",
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to fetch details");
+          }
+
+          const data = await response.json();
+          setBloodGroup(data.bloodGroup);
+          setMedicalConditions(data.medicalConditions);
+          setAdditionalInfo(data.additionalInfo);
+          console.log(data);
+        } catch (error) {
+          console.error("Error fetching details:", error);
+        }
+      };
+
+      getDetails();
+    } else {
+      console.log("Waiting for user object to load");
+    }
+  }, [user]);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setloading(true);

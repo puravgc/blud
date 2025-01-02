@@ -59,15 +59,19 @@ const Navbar = () => {
             {/* Signed-in users */}
             <SignedIn>
               <DropdownMenu>
-                <DropdownMenuTrigger>{userName}</DropdownMenuTrigger>
+                <DropdownMenuTrigger>
+                  <UserButton
+                    afterSignOutUrl="/"
+                    appearance={{
+                      elements: { userButtonTrigger: "w-8 h-8 rounded-full" },
+                    }}
+                  />
+                </DropdownMenuTrigger>
                 <DropdownMenuContent className="mt-2">
                   <DropdownMenuItem>
-                    <UserButton
-                      afterSignOutUrl="/" // Redirect to homepage after sign out
-                      appearance={{
-                        elements: { userButtonTrigger: "w-8 h-8 rounded-full" },
-                      }}
-                    />
+                    <Link href="/details">
+                      <button className="w-full text-left">Details</button>
+                    </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <SignOutButton>
