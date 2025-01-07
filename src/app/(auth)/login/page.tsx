@@ -13,14 +13,28 @@ import {
 import Image from "next/image";
 
 const LoginPage = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const [hospitalCode, sethospitalCode] = useState();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Hospital Login Submitted");
+    try {
+      const fetchedData = await fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, hospitalCode }),
+      });
+      const responseData = await fetchedData.json();
+      if (responseData.success === true) {
+        console.log(responseData.token);
+      }
+    } catch (error) {
+      console.error("Error logging in:", error);
+    }
   };
 
   return (
     <div className="flex min-h-screen">
-      {/* Left Side: Login Form */}
       <div className="flex-1 flex items-center justify-center bg-white p-10">
         <Card className="w-full max-w-lg shadow-lg py-8">
           <CardHeader className="text-center space-y-2">
@@ -41,6 +55,9 @@ const LoginPage = () => {
                   placeholder="Enter your email"
                   className="mt-1"
                   required
+                  onChange={(event) => {
+                    setemail(event.target.value);
+                  }}
                 />
               </div>
               <div>
@@ -53,6 +70,9 @@ const LoginPage = () => {
                   placeholder="Enter your password"
                   className="mt-1"
                   required
+                  onChange={(event) => {
+                    setpassword(event.target.value);
+                  }}
                 />
               </div>
               <div>
@@ -67,6 +87,9 @@ const LoginPage = () => {
                   type="text"
                   placeholder="Enter your hospital code"
                   className="mt-1"
+                  onChange={(event) => {
+                    sethospitalCode(event.target.value);
+                  }}
                 />
               </div>
               <div className="text-right">
@@ -84,10 +107,7 @@ const LoginPage = () => {
               </Button>
               <p className="text-sm text-gray-500">
                 Don't have an account?{" "}
-                <a
-                  href="/signup"
-                  className="text-blue-500 hover:underline"
-                >
+                <a href="/signup" className="text-blue-500 hover:underline">
                   Sign up now
                 </a>
               </p>

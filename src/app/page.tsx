@@ -5,6 +5,7 @@ import { FaSquareInstagram } from "react-icons/fa6";
 import { FaTwitter } from "react-icons/fa";
 import Link from "next/link";
 
+
 export default function Home() {
   return (
     <div className="h-fit pt-10">

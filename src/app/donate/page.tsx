@@ -79,33 +79,6 @@ const Page = () => {
     }
   }, [userLocation]);
 
-  const bloodRequests = [
-    {
-      sn: 1,
-      bloodGroup: "A+",
-      address: "Kathmandu, Nepal",
-      hospitalName: "Grande Hospital",
-    },
-    {
-      sn: 2,
-      bloodGroup: "O-",
-      address: "Pokhara, Nepal",
-      hospitalName: "Manipal Hospital",
-    },
-    {
-      sn: 3,
-      bloodGroup: "B+",
-      address: "Biratnagar, Nepal",
-      hospitalName: "Birat Nursing Home",
-    },
-    {
-      sn: 4,
-      bloodGroup: "AB-",
-      address: "Lalitpur, Nepal",
-      hospitalName: "Patan Hospital",
-    },
-  ];
-
   return (
     <div className="p-5 bg-gray-100 min-h-screen font-sans">
       <h1 className="text-2xl font-semibold text-center text-gray-800 mb-6">

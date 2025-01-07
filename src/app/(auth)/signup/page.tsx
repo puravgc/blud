@@ -2,6 +2,8 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import {
   Card,
   CardContent,
@@ -10,31 +12,76 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import { useState } from "react";
+import LocationPicker from "@/components/location/Location";
 
 const SignupPage = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+  const [selectedLocation, setSelectedLocation] = useState<
+    [number, number] | null
+  >(null);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Hospital Signup Submitted");
+
+    if (!selectedLocation) {
+      toast.error("Please select your hospital's location.");
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+      hospitalCode: formData.get("hospitalCode"),
+      location: selectedLocation,
+    };
+
+    try {
+      const fetchedData = await fetch("/api/create-hospital", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const responseData = await fetchedData.json();
+
+      if (responseData.success) {
+        toast.success("Hospital created successfully. You can now log in.");
+        router.push("/login");
+      } else {
+        toast.error(responseData.error || "Failed to create hospital.");
+      }
+    } catch (error) {
+      console.error("Error creating hospital:", error);
+      toast.error("An error occurred while creating the hospital.");
+    }
   };
 
   return (
-    <div className="flex min-h-screen">
-      <div className="flex-1 flex items-center justify-center bg-white p-10">
-        <Card className="w-full max-w-lg shadow-lg py-8">
+    <div className="flex flex-col lg:flex-row items-center min-h-screen">
+      {/* Form Section */}
+      <div className="flex-1 flex items-center justify-center bg-white p-6">
+        <Card className="w-full max-w-md shadow-lg">
           <CardHeader className="text-center space-y-2">
-            <CardTitle className="text-3xl font-bold">Hospital Signup</CardTitle>
+            <CardTitle className="text-2xl font-bold">
+              Hospital Signup
+            </CardTitle>
             <p className="text-gray-500">
               Create your account to start helping save lives.
             </p>
           </CardHeader>
           <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-6">
+            <CardContent className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium">
                   Hospital Name
                 </label>
                 <Input
                   id="name"
+                  name="name"
                   type="text"
                   placeholder="Enter your hospital name"
                   className="mt-1"
@@ -47,6 +94,7 @@ const SignupPage = () => {
                 </label>
                 <Input
                   id="email"
+                  name="email"
                   type="email"
                   placeholder="Enter your email"
                   className="mt-1"
@@ -59,6 +107,7 @@ const SignupPage = () => {
                 </label>
                 <Input
                   id="password"
+                  name="password"
                   type="password"
                   placeholder="Enter your password"
                   className="mt-1"
@@ -74,26 +123,19 @@ const SignupPage = () => {
                 </label>
                 <Input
                   id="hospitalCode"
+                  name="hospitalCode"
                   type="text"
                   placeholder="Enter your hospital code"
                   className="mt-1"
                   required
                 />
               </div>
+              <LocationPicker setSelectedLocation={setSelectedLocation} />
             </CardContent>
-            <CardFooter className="flex flex-col items-center space-y-6">
+            <CardFooter className="flex flex-col items-center space-y-4">
               <Button type="submit" className="w-full">
                 Signup as Hospital
               </Button>
-              <p className="text-sm text-gray-500">
-                Already have an account?{" "}
-                <a
-                  href="/login"
-                  className="text-blue-500 hover:underline"
-                >
-                  Log in here
-                </a>
-              </p>
             </CardFooter>
           </form>
         </Card>
