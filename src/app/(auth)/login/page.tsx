@@ -11,12 +11,19 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import { useAuthStore } from "@/stores/authStore";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [hospitalCode, sethospitalCode] = useState();
+
+  const login = useAuthStore((state) => state.login);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    setLoading(true);
     event.preventDefault();
     try {
       const fetchedData = await fetch("/api/login", {
@@ -26,10 +33,15 @@ const LoginPage = () => {
       });
       const responseData = await fetchedData.json();
       if (responseData.success === true) {
-        console.log(responseData.token);
+        const token = responseData.token;
+        localStorage.setItem("token", token);
+        login();
+        router.push("/request");
       }
+      setLoading(false);
     } catch (error) {
       console.error("Error logging in:", error);
+      setLoading(false);
     }
   };
 
@@ -102,8 +114,8 @@ const LoginPage = () => {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col items-center space-y-6">
-              <Button type="submit" className="w-full">
-                Login as Hospital
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Logging in..." : "Login as Hospital"}
               </Button>
               <p className="text-sm text-gray-500">
                 Don't have an account?{" "}
