@@ -17,13 +17,31 @@ import {
   UserButton,
   useUser,
 } from "@clerk/nextjs";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
+import { useAuthStore } from "@/stores/authStore";
 
 const Navbar = () => {
   const { user } = useUser();
+  const { isLoggedIn, logout } = useAuthStore();
   const router = useRouter();
   const userName = user?.fullName || user?.firstName || "User";
+
+  const handleSignOut = () => {
+    logout();
+    router.push("/");
+  };
 
   return (
     <div className="border w-screen shadow-xl rounded-2xl top-0 left-0 z-50 fixed">
@@ -56,19 +74,46 @@ const Navbar = () => {
               </div>
             </SignedIn>
             {/* Signed-out users */}
-            <SignedOut>
-              <DropdownMenu>
-                <DropdownMenuTrigger>Login</DropdownMenuTrigger>
-                <DropdownMenuContent className="mt-2">
-                  <Link href="/login">
-                    <DropdownMenuItem>Login as hospital</DropdownMenuItem>
-                  </Link>
-                  <DropdownMenuItem>
-                    <SignInButton>Login as donor</SignInButton>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SignedOut>
+            {isLoggedIn ? (
+              <div className="flex justify-between w-1/3">
+                <Link href="/details">
+                  <li>Details</li>
+                </Link>
+
+                <AlertDialog>
+                  <AlertDialogTrigger asChild className=" cursor-pointer">
+                    <li>Sign Out</li>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Do you want to sign out?
+                      </AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction onClick={handleSignOut}>
+                        Sign Out
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            ) : (
+              <SignedOut>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>Login</DropdownMenuTrigger>
+                  <DropdownMenuContent className="mt-2">
+                    <Link href="/login">
+                      <DropdownMenuItem>Login as hospital</DropdownMenuItem>
+                    </Link>
+                    <DropdownMenuItem>
+                      <SignInButton>Login as donor</SignInButton>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SignedOut>
+            )}
 
             {/* Signed-in users */}
             <SignedIn>
