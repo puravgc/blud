@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,18 +30,26 @@ import {
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
-import { useAuthStore } from "@/stores/authStore";
 
 const Navbar = () => {
   const { user } = useUser();
-  const { isLoggedIn, logout } = useAuthStore();
   const router = useRouter();
+  const [isLoggedIn, setisLoggedIn] = useState(false);
   const userName = user?.fullName || user?.firstName || "User";
 
   const handleSignOut = () => {
-    logout();
+    localStorage.removeItem("token");
+    setisLoggedIn(false);
     router.push("/");
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setisLoggedIn(true);
+    } else {
+      setisLoggedIn(false);
+    }
+  }, []);
 
   return (
     <div className="border w-screen shadow-xl rounded-2xl top-0 left-0 z-50 fixed">
@@ -127,11 +135,11 @@ const Navbar = () => {
                   />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="mt-2">
-                  <DropdownMenuItem>
-                    <Link href="/details">
+                  <Link href="/details">
+                    <DropdownMenuItem>
                       <button className="w-full text-left">Details</button>
-                    </Link>
-                  </DropdownMenuItem>
+                    </DropdownMenuItem>
+                  </Link>
                   <DropdownMenuItem>
                     <SignOutButton>
                       <button className="w-full text-left">Sign Out</button>

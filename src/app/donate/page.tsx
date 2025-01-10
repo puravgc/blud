@@ -11,7 +11,6 @@ const Page = () => {
   const [data, setdata] = useState([]);
 
   useEffect(() => {
-    // Get user's location
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -20,7 +19,6 @@ const Page = () => {
         },
         (error) => {
           console.error("Error getting location: ", error);
-          // Check the error code to identify the issue
           if (error.code === error.PERMISSION_DENIED) {
             alert("Permission denied. Please enable location services.");
           } else if (error.code === error.POSITION_UNAVAILABLE) {
@@ -31,22 +29,22 @@ const Page = () => {
             alert("An unknown error occurred while retrieving location.");
           }
 
-          // Fallback to a default location (Kathmandu)
           setUserLocation([27.7172, 85.324]);
         }
       );
     } else {
       alert("Geolocation is not supported by this browser.");
-      // Fallback to a default location (Kathmandu)
+
       setUserLocation([27.7172, 85.324]);
     }
   }, []);
 
   useEffect(() => {
     const getRequests = async () => {
-      const fetchedData = await fetch("/api/get-request");
+      const fetchedData = await fetch("/api/get-hospital");
       const data = await fetchedData.json();
       setdata(data);
+      console.log(data)
     };
     getRequests();
   }, []);
@@ -103,7 +101,7 @@ const Page = () => {
                   <td className="py-3 px-4 rounded-l-lg">{index + 1}</td>
                   <td className="py-3 px-4">{request.bloodGroup}</td>
                   <td className="py-3 px-4">{request.address}</td>
-                  <td className="py-3 px-4">{request.hospitalName}</td>
+                  <td className="py-3 px-4">{request.name}</td>
                   <td className="py-3 px-4 text-center rounded-r-lg">
                     <Link href={`/donate/${request._id}`}>
                       <button className="px-4 py-2 bg-blue-500 text-white font-medium rounded-full shadow hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">

@@ -11,7 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
@@ -21,7 +20,6 @@ const LoginPage = () => {
   const [password, setpassword] = useState("");
   const [hospitalCode, sethospitalCode] = useState();
 
-  const login = useAuthStore((state) => state.login);
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
     event.preventDefault();
@@ -35,7 +33,7 @@ const LoginPage = () => {
       if (responseData.success === true) {
         const token = responseData.token;
         localStorage.setItem("token", token);
-        login();
+
         router.push("/request");
       }
       setLoading(false);

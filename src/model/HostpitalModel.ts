@@ -9,6 +9,8 @@ interface IHospital extends Document {
     type: "Point";
     coordinates: [number, number];
   };
+  bloodRequested: boolean;
+  bloodGroupRequested: { bloodGroup: string }[];
 }
 
 const hospitalSchema = new Schema<IHospital>({
@@ -36,16 +38,24 @@ const hospitalSchema = new Schema<IHospital>({
       enum: ["Point"],
       required: true,
     },
+
     coordinates: {
       type: [Number],
       required: true,
     },
   },
+  bloodRequested: {
+    type: Boolean,
+    default: false,
+  },
+  bloodGroupRequested: [
+    {
+      bloodGroup: { type: String, required: true },
+    },
+  ],
 });
 
 hospitalSchema.index({ location: "2dsphere" });
-
-// Check if the model is already compiled, otherwise compile it
 const Hospital =
   mongoose.models.Hospital ||
   mongoose.model<IHospital>("Hospital", hospitalSchema);

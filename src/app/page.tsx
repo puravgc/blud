@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { FaFacebook } from "react-icons/fa";
@@ -5,8 +6,31 @@ import { FaSquareInstagram } from "react-icons/fa6";
 import { FaTwitter } from "react-icons/fa";
 import Link from "next/link";
 
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const [isLoggedIn, setisLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const user = localStorage.getItem("token");
+    if (user) {
+      setisLoggedIn(true);
+    } else {
+      setisLoggedIn(false);
+    }
+  }, []);
+
+  const handleDonate = () => {
+    if (isLoggedIn === true) {
+      toast.error("You must be logged in as a donor");
+      return;
+    } else {
+      router.push("/donate");
+    }
+  };
   return (
     <div className="h-fit pt-10">
       <div className="flex h-full">
@@ -20,11 +44,12 @@ export default function Home() {
               One small act of kindness can make a world of difference.
             </p>
             <div className=" flex justify-start items-center w-full pt-5">
-              <Link href="/donate">
-                <Button className=" px-8 py-6 bg-white text-red-500 border border-red-500 font-bold rounded-none shadow-lg hover:bg-red-500 hover:text-white transition duration-300">
-                  DONATE NOW!
-                </Button>
-              </Link>
+              <Button
+                onClick={handleDonate}
+                className=" px-8 py-6 bg-white text-red-500 border border-red-500 font-bold rounded-none shadow-lg hover:bg-red-500 hover:text-white transition duration-300"
+              >
+                DONATE NOW!
+              </Button>
 
               <Button className=" uppercase px-8 py-6 bg-white text-red-500 border border-red-500 font-bold rounded-none shadow-lg hover:bg-red-500 hover:text-white transition duration-300 ml-5">
                 Request for Blood Donation
