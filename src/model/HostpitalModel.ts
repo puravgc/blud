@@ -5,12 +5,13 @@ interface IHospital extends Document {
   email: string;
   password: string;
   hospitalCode: string;
+  address: string;
   location: {
     type: "Point";
     coordinates: [number, number];
   };
   bloodRequested: boolean;
-  bloodGroupRequested: { bloodGroup: string }[];
+  bloodGroupRequested: string[];
 }
 
 const hospitalSchema = new Schema<IHospital>({
@@ -32,6 +33,10 @@ const hospitalSchema = new Schema<IHospital>({
     required: true,
     unique: true,
   },
+  address: {
+    type: String,
+    required: true,
+  },
   location: {
     type: {
       type: String,
@@ -50,7 +55,7 @@ const hospitalSchema = new Schema<IHospital>({
   },
   bloodGroupRequested: [
     {
-      bloodGroup: { type: String, required: true },
+      type: String,
     },
   ],
 });

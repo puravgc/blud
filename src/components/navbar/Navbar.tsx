@@ -1,5 +1,4 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -22,42 +21,42 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
-import { Button } from "../ui/button";
+import { useAuthStore } from "@/store/authStore";
 
 const Navbar = () => {
   const { user } = useUser();
   const router = useRouter();
-  const [isLoggedIn, setisLoggedIn] = useState(false);
   const userName = user?.fullName || user?.firstName || "User";
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const setIsLoggedIn = useAuthStore((state) => state.setIsLoggedIn);
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
-    setisLoggedIn(false);
+    setIsLoggedIn(false);
     router.push("/");
   };
-
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      setisLoggedIn(true);
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
     } else {
-      setisLoggedIn(false);
+      setIsLoggedIn(false);
     }
-  }, []);
+  }, [isLoggedIn]);
 
   return (
     <div className="border w-screen shadow-xl rounded-2xl top-0 left-0 z-50 fixed">
       <div className="flex justify-around items-center mt-2 mb-2 w-full">
         <Link href={"/"}>
           <div className="w-1/2 flex justify-center items-center">
-            <Image src="/logo.png" width={50} height={50} alt="Logo" />
-            <h1 className="text-4xl font-bold">
+            <Image src="/logo.png" width={40} height={30} alt="Logo" />
+            <h1 className="text-3xl font-bold">
               <span className="text-red-500">B</span>LUD
             </h1>
           </div>
@@ -81,7 +80,8 @@ const Navbar = () => {
                 </div>
               </div>
             </SignedIn>
-            {/* Signed-out users */}
+
+            {/* Show links based on login status */}
             {isLoggedIn ? (
               <div className="flex justify-between w-1/3">
                 <Link href="/details">
@@ -89,7 +89,7 @@ const Navbar = () => {
                 </Link>
 
                 <AlertDialog>
-                  <AlertDialogTrigger asChild className=" cursor-pointer">
+                  <AlertDialogTrigger asChild className="cursor-pointer">
                     <li>Sign Out</li>
                   </AlertDialogTrigger>
                   <AlertDialogContent>
@@ -123,7 +123,6 @@ const Navbar = () => {
               </SignedOut>
             )}
 
-            {/* Signed-in users */}
             <SignedIn>
               <DropdownMenu>
                 <DropdownMenuTrigger>

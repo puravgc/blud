@@ -6,19 +6,48 @@ import Hospital from "@/model/HostpitalModel";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, password, hospitalCode, location } = body;
+    let {
+      name,
+      email,
+      password,
+      hospitalCode,
+      address,
+      location,
+      bloodRequested,
+      bloodGroupRequested,
+    } = body;
 
-    if (!name || !email || !password || !hospitalCode || !location) {
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !hospitalCode ||
+      !location ||
+      !address
+    ) {
       return NextResponse.json(
         { error: "All fields are required." },
         { status: 400 }
       );
     }
 
-    // Connect to the database
+    // Ensure location is an array of latitude and longitude
+    if (!Array.isArray(location) || location.length !== 2) {
+      return NextResponse.json(
+        { error: "Location must be an array with latitude and longitude." },
+        { status: 400 }
+      );
+    }
+
+    // Ensure bloodGroupRequested is an array of strings
+    if (Array.isArray(bloodGroupRequested)) {
+      // No need to map to an object, just keep as an array of strings
+      bloodGroupRequested = bloodGroupRequested.map((group) => group);
+    }
+
     await connectToDatabase();
 
-    // Check if the hospital already exists
+    // Check if a hospital with this email already exists
     const existingHospital = await Hospital.findOne({ email });
     if (existingHospital) {
       return NextResponse.json(
@@ -30,16 +59,19 @@ export async function POST(req: Request) {
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new hospital
+    // Create the new hospital
     const newHospital = new Hospital({
       name,
       email,
       password: hashedPassword,
       hospitalCode,
+      address,
       location: {
         type: "Point",
-        coordinates: location, // [longitude, latitude]
+        coordinates: location,
       },
+      bloodRequested,
+      bloodGroupRequested, // Store as an array of strings
     });
 
     await newHospital.save();
@@ -47,12 +79,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         message: "Hospital registered successfully.",
-        hospital: {
-          id: newHospital._id,
-          name: newHospital.name,
-          email: newHospital.email,
-          location: newHospital.location,
-        },
+        hospital: newHospital,
         success: true,
       },
       { status: 201 }

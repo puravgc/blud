@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+
 import {
   Card,
   CardContent,
@@ -12,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import LocationPicker from "@/components/location/Location";
 
 const SignupPage = () => {
@@ -20,21 +21,36 @@ const SignupPage = () => {
   const [selectedLocation, setSelectedLocation] = useState<
     [number, number] | null
   >(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [hospitalCode, setHospitalCode] = useState("");
+  const [address, setAddress] = useState("");
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  useEffect(() => {
+      const checkLogin = () => {
+        const token = localStorage.getItem("token");
+        if (token) {
+          router.push("/");
+        } else {
+          return;
+        }
+      };
+      checkLogin();
+    }, []);
 
+  const handleSubmit = async () => {
     if (!selectedLocation) {
       toast.error("Please select your hospital's location.");
       return;
     }
 
-    const formData = new FormData(event.currentTarget);
     const data = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-      hospitalCode: formData.get("hospitalCode"),
+      name,
+      email,
+      password,
+      hospitalCode,
+      address,
       location: selectedLocation,
     };
 
@@ -73,71 +89,87 @@ const SignupPage = () => {
               Create your account to start helping save lives.
             </p>
           </CardHeader>
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium">
-                  Hospital Name
-                </label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Enter your hospital name"
-                  className="mt-1"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium">
-                  Email
-                </label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Enter your email"
-                  className="mt-1"
-                  required
-                />
-              </div>
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium">
-                  Password
-                </label>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  className="mt-1"
-                  required
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="hospitalCode"
-                  className="block text-sm font-medium"
-                >
-                  Hospital Code
-                </label>
-                <Input
-                  id="hospitalCode"
-                  name="hospitalCode"
-                  type="text"
-                  placeholder="Enter your hospital code"
-                  className="mt-1"
-                  required
-                />
-              </div>
-              <LocationPicker setSelectedLocation={setSelectedLocation} />
-            </CardContent>
-            <CardFooter className="flex flex-col items-center space-y-4">
-              <Button type="submit" className="w-full">
-                Signup as Hospital
-              </Button>
-            </CardFooter>
-          </form>
+          <CardContent className="space-y-4">
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium">
+                Hospital Name
+              </label>
+              <Input
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                type="text"
+                placeholder="Enter your hospital name"
+                className="mt-1"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium">
+                Email
+              </label>
+              <Input
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Enter your email"
+                className="mt-1"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium">
+                Password
+              </label>
+              <Input
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Enter your password"
+                className="mt-1"
+                required
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="hospitalCode"
+                className="block text-sm font-medium"
+              >
+                Hospital Code
+              </label>
+              <Input
+                id="hospitalCode"
+                value={hospitalCode}
+                onChange={(e) => setHospitalCode(e.target.value)}
+                type="text"
+                placeholder="Enter your hospital code"
+                className="mt-1"
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="address" className="block text-sm font-medium">
+                Address
+              </label>
+              <Input
+                id="address"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                type="text"
+                placeholder="Enter your address"
+                className="mt-1"
+                required
+              />
+            </div>
+            <LocationPicker setSelectedLocation={setSelectedLocation} />
+          </CardContent>
+          <CardFooter className="flex flex-col items-center space-y-4">
+            <Button type="button" onClick={handleSubmit} className="w-full">
+              Signup as Hospital
+            </Button>
+          </CardFooter>
         </Card>
       </div>
 

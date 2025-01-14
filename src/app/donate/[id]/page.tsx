@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
 interface Request {
+  bloodGroupRequested: any;
   _id: string;
   hospital: string;
   address: string;
@@ -17,7 +18,6 @@ const Page = () => {
 
   const [fetchedData, setFetchedData] = useState<Request | null>(null);
   const [error, setError] = useState<string | null>(null);
-
   const [donorName, setDonorName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [message, setMessage] = useState("");
@@ -32,7 +32,7 @@ const Page = () => {
           throw new Error(`Failed to fetch data: ${response.statusText}`);
         }
         const data = await response.json();
-        setFetchedData(data); // Set the single object
+        setFetchedData(data);
       } catch (err: any) {
         setError(err.message);
       }
@@ -43,14 +43,14 @@ const Page = () => {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle donor submission logic here
+
     console.log({
       donorName,
       phoneNumber,
       message,
     });
     alert("Thank you for your interest! Your details have been submitted.");
-    // Reset the form
+
     setDonorName("");
     setPhoneNumber("");
     setMessage("");
@@ -77,13 +77,23 @@ const Page = () => {
       >
         <h2 style={{ margin: "0 0 10px" }}>{fetchedData.name}</h2>
         <p>
+          <strong>Contact:</strong> {fetchedData.email}
+        </p>
+        <p>
           <strong>Address:</strong> {fetchedData.address}
         </p>
         <p>
-          <strong>Blood Group Needed:</strong> {fetchedData.bloodGroup}
-        </p>
-        <p>
-          <strong>Description:</strong> {fetchedData.description}
+          <strong>Blood Group Needed:</strong>{" "}
+          {fetchedData.bloodGroupRequested.map((grp, index) => {
+            return (
+              <span
+                key={index}
+                className="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-gray-300 text-gray-800 mr-1"
+              >
+                {grp}
+              </span>
+            );
+          })}
         </p>
       </div>
 

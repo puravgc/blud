@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { useAuthStore } from "@/store/authStore";
 
 const LoginPage = () => {
   const router = useRouter();
@@ -19,6 +21,20 @@ const LoginPage = () => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
   const [hospitalCode, sethospitalCode] = useState();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const setIsLoggedIn = useAuthStore((state) => state.setIsLoggedIn);
+
+  useEffect(() => {
+    const checkLogin = () => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        router.push("/");
+      } else {
+        return;
+      }
+    };
+    checkLogin();
+  }, []);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     setLoading(true);
@@ -33,8 +49,11 @@ const LoginPage = () => {
       if (responseData.success === true) {
         const token = responseData.token;
         localStorage.setItem("token", token);
-
-        router.push("/request");
+        setIsLoggedIn(true);
+        router.push("/");
+        toast.success(responseData.message);
+      } else {
+        toast.error(responseData.error || "Failed to login.");
       }
       setLoading(false);
     } catch (error) {
