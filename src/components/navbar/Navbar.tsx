@@ -14,7 +14,6 @@ import {
   SignedIn,
   SignedOut,
   UserButton,
-  useUser,
 } from "@clerk/nextjs";
 import {
   AlertDialog,
@@ -30,9 +29,7 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/authStore";
 
 const Navbar = () => {
-  const { user } = useUser();
   const router = useRouter();
-  const userName = user?.fullName || user?.firstName || "User";
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const setIsLoggedIn = useAuthStore((state) => state.setIsLoggedIn);
 

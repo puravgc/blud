@@ -12,6 +12,7 @@ interface IHospital extends Document {
   };
   bloodRequested: boolean;
   bloodGroupRequested: string[];
+  urgency: string;
 }
 
 const hospitalSchema = new Schema<IHospital>({
@@ -58,6 +59,9 @@ const hospitalSchema = new Schema<IHospital>({
       type: String,
     },
   ],
+  urgency: {
+    type: String,
+  },
 });
 
 hospitalSchema.index({ location: "2dsphere" });

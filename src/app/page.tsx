@@ -31,6 +31,15 @@ export default function Home() {
       router.push("/donate");
     }
   };
+
+  const handleRequest = () => {
+    if (isLoggedIn === false) {
+      toast.error("You must be logged in as a recipient");
+      return;
+    } else {
+      router.push("/request");
+    }
+  };
   return (
     <div className="h-fit pt-10">
       <div className="flex h-full">
@@ -51,7 +60,10 @@ export default function Home() {
                 DONATE NOW!
               </Button>
 
-              <Button className=" uppercase px-8 py-6 bg-white text-red-500 border border-red-500 font-bold rounded-none shadow-lg hover:bg-red-500 hover:text-white transition duration-300 ml-5">
+              <Button
+                onClick={handleRequest}
+                className=" uppercase px-8 py-6 bg-white text-red-500 border border-red-500 font-bold rounded-none shadow-lg hover:bg-red-500 hover:text-white transition duration-300 ml-5"
+              >
                 Request for Blood Donation
               </Button>
             </div>
