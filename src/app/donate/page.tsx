@@ -53,11 +53,8 @@ const Page = () => {
     const getRequests = async () => {
       const fetchedData = await fetch("/api/get-hospital");
       const data = await fetchedData.json();
+
       setdata(data);
-      console.log(data);
-      data.forEach((request: any) => {
-        console.log(request.location.coordinates);
-      });
     };
     getRequests();
   }, []);
@@ -77,6 +74,7 @@ const Page = () => {
                   <tr className="bg-gray-200 text-gray-700 rounded-lg sticky top-0 z-10">
                     <th className="py-3 px-4 text-left rounded-tl-lg">S.N</th>
                     <th className="py-3 px-4 text-left">Blood Group</th>
+                    <th className="py-3 px-4 text-left">Urgency</th>
                     <th className="py-3 px-4 text-left">Address</th>
                     <th className="py-3 px-4 text-left">Hospital</th>
                     <th className="py-3 px-4 text-center rounded-tr-lg">
@@ -101,6 +99,7 @@ const Page = () => {
                           </span>
                         ))}
                       </td>
+                      <td className="py-3 px-4">{request.urgency}</td>
                       <td className="py-3 px-4">{request.address}</td>
                       <td className="py-3 px-4">{request.name}</td>
                       <td className="py-3 px-4 text-center rounded-r-lg">

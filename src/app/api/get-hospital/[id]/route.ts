@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     await connectToDatabase();
-    const { id } = context.params;
+    const { id } = await context.params;
     if (!id) {
       const requests = await Hospital.find({});
       return NextResponse.json(requests);

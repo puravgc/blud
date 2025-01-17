@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // Define routes that require authentication
-const isProtectedRoute = createRouteMatcher(["/donate(.*),/request(.*)"]);
+const isProtectedRoute = createRouteMatcher(["/donate(.*)", "/request(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {

@@ -9,7 +9,15 @@ export async function GET(req: NextRequest) {
     if (!hospital) {
       return NextResponse.json({ message: "hospital not found" });
     }
-    return NextResponse.json(hospital);
+    const sortedHospitals = hospital.sort((a, b) => {
+      const urgencyOrder = { Urgent: 1, Normal: 2, undefined: 3 };
+      const urgencyA = urgencyOrder[a.urgency] || 3;
+      const urgencyB = urgencyOrder[b.urgency] || 3;
+
+      return urgencyA - urgencyB;
+    });
+
+    return NextResponse.json(sortedHospitals);
   } catch (error: any) {
     console.error("Error in GET /api/route:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });

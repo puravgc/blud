@@ -94,6 +94,7 @@ const Page = () => {
               </span>
             );
           })}
+          <strong>Urgency:</strong> {fetchedData.urgency}
         </p>
       </div>
 
