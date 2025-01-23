@@ -66,9 +66,9 @@ const Page = () => {
       </h1>
       <div className="p-5 bg-gray-100 min-h-screen font-sans flex flex-col gap-8">
         {/* Table Section */}
-        <div className="flex-grow overflow-hidden">
+        <div className="overflow-hidden">
           <div className="overflow-x-auto">
-            <div className="overflow-y-auto max-h-[400px] border rounded-lg shadow">
+            <div className="overflow-y-auto max-h-[400px] border rounded-lg shadow ">
               <table className="table-auto w-full border-collapse border-spacing-2 min-w-[700px]">
                 <thead>
                   <tr className="bg-gray-200 text-gray-700 rounded-lg sticky top-0 z-10">
@@ -117,17 +117,19 @@ const Page = () => {
           </div>
         </div>
 
+        <hr />
+
         {/* Map Section */}
-        <div className="mt-6">
+        <div className="">
           {loading ? (
             <div
               role="status"
-              className="loader flex items-center justify-center min-h-[400px]"
+              className="loader flex items-center justify-center"
             >
               <span>Loading...</span>
             </div>
           ) : (
-            <div className="min-h-[400px] w-full rounded-lg shadow-lg">
+            <div className="w-full shadow-2xl">
               <LeafletMap userLocation={userLocation} data={data} />
             </div>
           )}
